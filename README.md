@@ -1,6 +1,6 @@
 # dejamobile_card_app
 
-A new Flutter project.
+Application mobile Flutter pour l'exercice de Dejamobile.
 
 ## Getting Started
 
