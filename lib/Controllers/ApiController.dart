@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dejamobile_card_app/Models/Pay.dart';
 import 'package:dejamobile_card_app/Models/User.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,6 +13,11 @@ class ApiController {
     return response;
   }
 
+  static Future getPaymentsBySenderID(String senderID) {
+    var response = http.get(Uri.encodeFull("$url/pay/$senderID"));
+    return response;
+  }
+
   // --- {POST} --- //
 
   static Future addUser(User userData) {
@@ -20,12 +26,27 @@ class ApiController {
     return response;
   }
 
+  static Future addCard(Map<String, dynamic> card) {
+    var response = http.post(Uri.encodeFull("$url/cards"),
+        headers: {"Content-Type": "application/json"}, body: jsonEncode(card));
+    return response;
+  }
+
+  static Future addPay(Pay pay) {
+    var response = http.post(Uri.encodeFull("$url/pay"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(pay.toJson()));
+    return response;
+  }
+
   // --- {PUT} --- //
 
   static Future login(Map<String, dynamic> rawBody) {
-    var response = http.put(Uri.encodeFull("$url/login"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(rawBody));
+    var response = http
+        .put(Uri.encodeFull("$url/login"),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode(rawBody))
+        .timeout(Duration(seconds: 2));
     return response;
   }
 

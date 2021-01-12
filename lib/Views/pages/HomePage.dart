@@ -25,6 +25,7 @@ class HomePageState extends State<HomePage> {
             // EMAIL
             TextFormField(
               validator: (value) {
+                value = value.trim();
                 if (value.isEmpty) return 'Le champ ne doit pas être vide.';
                 if (auth.isNotEmail(value))
                   return 'la valeur rentrée n\'est pas un email valide.';
@@ -38,6 +39,7 @@ class HomePageState extends State<HomePage> {
             ),
             // MOT DE PASSE
             TextFormField(
+              obscureText: true,
               validator: (mdp) {
                 if (mdp.isEmpty) return 'Le champ ne doit pas être vide.';
                 mdpVal = mdp;
@@ -52,6 +54,7 @@ class HomePageState extends State<HomePage> {
               onPressed: () {
                 if (_formKey.currentState.validate())
                   formData = {"email": emailVal, "password": mdpVal};
+                if (emailVal == null || mdpVal == null) return null;
                 auth.login(context, formData);
               },
               child: Text("Valider"),
