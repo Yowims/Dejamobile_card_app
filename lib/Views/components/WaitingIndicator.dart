@@ -9,7 +9,8 @@ class WaitingIndicator extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CircularProgressIndicator(
-            valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
+            valueColor: new AlwaysStoppedAnimation<Color>(
+                Theme.of(context).accentColor),
           )
         ],
       ),

@@ -22,6 +22,7 @@ class ApiController {
 
   static Future addUser(User userData) {
     var response = http.post(Uri.encodeFull("$url/users"),
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode(userData.toJson()));
     return response;
   }

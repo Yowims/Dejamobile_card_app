@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dejamobile_card_app/Controllers/ApiController.dart';
 import 'package:dejamobile_card_app/Models/Pay.dart';
+import 'package:dejamobile_card_app/Views/components/WaitingIndicator.dart';
 import 'package:dejamobile_card_app/Views/pages/PayListPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +19,18 @@ class PayListController {
     });
   }
 
-  addPayment(Pay pay, BuildContext context) async {
+  addPayment(Pay pay, BuildContext context, String cardId) async {
+    showDialog(
+        context: context, barrierDismissible: false, child: WaitingIndicator());
     await ApiController.addPay(pay).then((response) {
       if (response.statusCode == 201) {
         Fluttertoast.showToast(msg: "Paiement pris en compte.");
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => PayListPage()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => PayListPage(
+                      cardId: cardId,
+                    )));
       } else {
         showDialog(
             context: context,

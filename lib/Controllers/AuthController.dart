@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dejamobile_card_app/Controllers/ApiController.dart';
+import 'package:dejamobile_card_app/Models/User.dart';
 import 'package:dejamobile_card_app/Views/components/WaitingIndicator.dart';
 import 'package:dejamobile_card_app/Views/pages/CardListPage.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +16,14 @@ class AuthController {
       return false;
     else
       return true;
+  }
+
+  incChars(String value) {
+    RegExp reg = new RegExp(r"^[^\w\-\']+$");
+    if (reg.hasMatch(value)) {
+      return true;
+    }
+    return false;
   }
 
   login(BuildContext context, Map<String, dynamic> body) async {
@@ -55,5 +64,25 @@ class AuthController {
         Navigator.of(context).pop();
       });
     }
+  }
+
+  register(BuildContext context, User user) async {
+    showDialog(
+        context: context, barrierDismissible: false, child: WaitingIndicator());
+    await ApiController.addUser(user).then((response) {
+      if (response.statusCode != 201) {
+        showDialog(
+            context: context,
+            barrierDismissible: true,
+            child: CupertinoAlertDialog(
+              title: Text("Erreur"),
+              content: Text(response.body),
+            )).then((action) {
+          Navigator.of(context).pop();
+        });
+      } else {
+        login(context, user.toJson());
+      }
+    });
   }
 }

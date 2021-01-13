@@ -1,23 +1,23 @@
-import 'package:dejamobile_card_app/Views/pages/RegisterPage.dart';
-import 'package:flutter/material.dart';
 import 'package:dejamobile_card_app/Controllers/AuthController.dart';
+import 'package:dejamobile_card_app/Models/User.dart';
+import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   @override
-  HomePageState createState() => HomePageState();
+  RegisterPageState createState() => new RegisterPageState();
 }
 
-class HomePageState extends State<HomePage> {
-  final _formKey = GlobalKey<FormState>();
-  final auth = new AuthController();
-  String emailVal, mdpVal;
-  Map<String, dynamic> formData;
-
+class RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
+    final auth = new AuthController();
+    String emailVal, mdpVal, nameVal;
+    Map<String, dynamic> formData;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Connexion"),
+        title: Text("Inscription"),
       ),
       body: Form(
         key: _formKey,
@@ -55,6 +55,30 @@ class HomePageState extends State<HomePage> {
               SizedBox(
                 height: 80,
               ),
+              // NOM & PRENOM
+              Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: TextFormField(
+                    validator: (name) {
+                      if (name.isEmpty)
+                        return 'Le champ ne doit pas être vide.';
+                      nameVal = name;
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      hintText: "Nom Prénom",
+                      hintStyle: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 80,
+              ),
               // MOT DE PASSE
               Container(
                 decoration: BoxDecoration(
@@ -79,30 +103,15 @@ class HomePageState extends State<HomePage> {
               RaisedButton(
                 onPressed: () {
                   if (_formKey.currentState.validate())
-                    formData = {"email": emailVal, "password": mdpVal};
-                  if (emailVal == null || mdpVal == null) return null;
-                  auth.login(context, formData);
+                    formData = {
+                      "email": emailVal,
+                      "name": nameVal,
+                      "password": mdpVal
+                    };
+                  User newUser = User.fromJson(formData);
+                  auth.register(context, newUser);
                 },
                 child: Text("Valider"),
-              ),
-              Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Pas encore inscrit? "),
-                  FlatButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RegisterPage()));
-                    },
-                    child: Text(
-                      "Cliquez ici!",
-                      style: TextStyle(color: Theme.of(context).accentColor),
-                    ),
-                  )
-                ],
               )
             ],
           ),

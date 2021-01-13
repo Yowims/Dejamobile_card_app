@@ -1,5 +1,6 @@
 import 'package:dejamobile_card_app/Controllers/PayListController.dart';
 import 'package:dejamobile_card_app/Models/Pay.dart';
+import 'package:dejamobile_card_app/Views/pages/NewPayPage.dart';
 import 'package:flutter/material.dart';
 
 class PayListPage extends StatefulWidget {
@@ -19,8 +20,8 @@ class PayListPageState extends State<PayListPage> {
   bool isLoading = false;
   TextStyle commentStyle =
       new TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
-  TextStyle depot = TextStyle(color: Colors.green);
-  TextStyle retrait = TextStyle(color: Colors.red);
+  TextStyle gain = TextStyle(color: Colors.green);
+  TextStyle perte = TextStyle(color: Colors.red);
 
   displayPayments() async {
     setState(() {
@@ -41,10 +42,11 @@ class PayListPageState extends State<PayListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Dejamobile Takehome"),
-        ),
-        body: Column(
+      appBar: AppBar(
+        title: Text("Dejamobile Takehome"),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
           //alignment: WrapAlignment.center,
           children: [
             Container(
@@ -56,6 +58,7 @@ class PayListPageState extends State<PayListPage> {
             ),
             ListView.builder(
                 shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
                 itemCount: payList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
@@ -79,11 +82,11 @@ class PayListPageState extends State<PayListPage> {
                               payList[index].senderID != this.cardIDstate
                                   ? Text(
                                       "${payList[index].amount} €",
-                                      style: retrait,
+                                      style: gain,
                                     )
                                   : Text(
                                       "${payList[index].amount} €",
-                                      style: depot,
+                                      style: perte,
                                     )
                             ],
                           )
@@ -93,6 +96,19 @@ class PayListPageState extends State<PayListPage> {
                   );
                 })
           ],
-        ));
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => NewPayPage(
+                        cardID: cardIDstate,
+                      )));
+        },
+        child: Icon(Icons.add),
+      ),
+    );
   }
 }

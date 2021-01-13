@@ -36,19 +36,12 @@ class CardListPageState extends State<CardListPage> {
     displayCards();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        return Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (context) => HomePage()), (e) => false);
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("Dejamobile Takehome"),
-        ),
-        body: ListView.builder(
+  Widget cardWidget(BuildContext context) {
+    if (myCards.length != 0) {
+      return SingleChildScrollView(
+        child: ListView.builder(
             shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             itemCount: myCards.length,
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
@@ -78,6 +71,34 @@ class CardListPageState extends State<CardListPage> {
                 ),
               );
             }),
+      );
+    } else {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("Vous n'avez pas encore enregistré de carte."),
+            Text(
+                'Vous pourrez le faire en tapant sur le "+" en bas de l\'écran.')
+          ],
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () {
+        return Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (context) => HomePage()), (e) => false);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Dejamobile Takehome"),
+        ),
+        body: cardWidget(context),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(context,
